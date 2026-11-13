@@ -1,0 +1,21 @@
+# Dependencies & build output
+node_modules/
+src-tauri/target/
+dist/
+
+# Personal usage data (written by the app / browser fallback)
+sessions.json
+draft.json
+
+# Local tooling & secrets
+.claude/
+.env
+.env.*
+*.pem
+*.key
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
+*.log

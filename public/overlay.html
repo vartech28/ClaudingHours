@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ClaudingHours Overlay</title>
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    /*
+      border-radius + overflow:hidden on html clips the WebView itself to a
+      rounded rectangle. This is the correct approach for Tauri transparent
+      windows — the OS shadow then follows the rounded painted content, not
+      the rectangular window frame, giving clean corners.
+    */
+    html {
+      width: 100%;
+      height: 100%;
+      background: transparent;
+      overflow: hidden;
+      border-radius: 22px;
+    }
+
+    body {
+      width: 100%;
+      height: 100%;
+      background: transparent;
+      color: #e8e8e8;
+      font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      overflow: hidden;
+      user-select: none;
+    }
+
+    .stage {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2.25rem;
+
+      background: rgba(12, 12, 14, 0.94);
+      border-radius: 22px;
+      border: 1px solid rgba(255, 255, 255, 0.09);
+
+      cursor: grab;
+    }
+    .stage:active {
+      cursor: grabbing;
+    }
+
+    /* Fullscreen: remove html clip and fill edge-to-edge */
+    html:has(body.is-fullscreen) {
+      border-radius: 0;
+    }
+    body.is-fullscreen .stage {
+      inset: 0;
+      border-radius: 0;
+      border-color: transparent;
+    }
+
+    /* Timer */
+    #timer {
+      font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+      font-size: clamp(72px, 14vw, 200px);
+      font-weight: 200;
+      letter-spacing: 0.04em;
+      color: #ffffff;
+      font-variant-numeric: tabular-nums;
+      line-height: 1;
+      transition: color 0.4s;
+      pointer-events: none;
+    }
+    #timer.paused {
+      color: rgba(255, 255, 255, 0.28);
+    }
+
+    /* Fullscreen timer: bigger, always full brightness regardless of state */
+    body.is-fullscreen #timer {
+      font-size: clamp(120px, 18vw, 380px);
+      color: #ffffff !important;
+    }
+
+    /* Controls */
+    .controls {
+      display: flex;
+      gap: 0.6rem;
+      cursor: default;
+    }
+
+    button {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.11);
+      color: rgba(255, 255, 255, 0.48);
+      font-family: inherit;
+      font-size: 0.68rem;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      padding: 0.45rem 1.1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.08s, border-color 0.08s, color 0.08s;
+    }
+    button:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.25);
+      color: rgba(255, 255, 255, 0.85);
+    }
+    button:active {
+      background: rgba(255, 255, 255, 0.18);
+    }
+    button.active {
+      background: rgba(124, 106, 247, 0.22);
+      border-color: rgba(124, 106, 247, 0.45);
+      color: #c4b8ff;
+    }
+
+    /* Hint */
+    .hint {
+      font-size: 0.6rem;
+      letter-spacing: 0.06em;
+      color: rgba(255, 255, 255, 0.16);
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="stage">
+    <div id="timer">00:00:00</div>
+    <div class="controls">
+      <button id="btn-fullscreen">&#x26F6; Fullscreen</button>
+      <button id="btn-close">&#x2715; Close</button>
+    </div>
+    <div class="hint">Drag anywhere &nbsp;&middot;&nbsp; ESC to close</div>
+  </div>
+
+  <script src="overlay.js"></script>
+</body>
+</html>

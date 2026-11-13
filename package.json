@@ -1,0 +1,19 @@
+{
+  "name": "clauding-hours",
+  "version": "1.0.0",
+  "description": "Session timer for tracking Claude/AI coding hours",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "tauri": "tauri",
+    "dev": "tauri dev",
+    "build": "tauri build"
+  },
+  "dependencies": {
+    "express": "^4.22.3",
+    "open": "^9.1.0"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.12.4"
+  }
+}
